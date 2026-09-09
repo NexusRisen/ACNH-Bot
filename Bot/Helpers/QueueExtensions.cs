@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Text;
 
 namespace SysBot.ACNHOrders
 {
@@ -128,6 +130,10 @@ namespace SysBot.ACNHOrders
                 .WithFooter(footer => footer.WithText("ACNH Orders"))
                 .WithCurrentTimestamp();
 
+            // Add items ordered to the queue confirmation
+            var itemSummary = GetItemSummaryFromOrder(itemReq.Order);
+            successBuilder.AddField("Items Ordered", itemSummary, inline: false);
+
             if (itemReq.VillagerOrder != null)
             {
                 var villagerName = GameInfo.Strings.GetVillager(itemReq.VillagerOrder.GameName);
@@ -140,6 +146,37 @@ namespace SysBot.ACNHOrders
 
             statusEmbed = successBuilder.Build();
             return true;
+        }
+
+        private static string GetItemSummaryFromOrder(Item[] order)
+        {
+            if (order == null || order.Length == 0)
+                return "No items";
+
+            // Filter out empty items and group by name
+            var validItems = order.Where(item => item.ItemId != Item.NONE).ToArray();
+            if (validItems.Length == 0)
+                return "No items";
+
+            var itemCounts = new Dictionary<string, int>();
+            foreach (var item in validItems)
+            {
+                var itemName = GameInfo.Strings.GetItemName(item.ItemId);
+                if (!itemCounts.ContainsKey(itemName))
+                    itemCounts[itemName] = 0;
+                itemCounts[itemName]++;
+            }
+
+            var sb = new System.Text.StringBuilder();
+            foreach (var kvp in itemCounts)
+            {
+                if (kvp.Value > 1)
+                    sb.AppendLine($"• {kvp.Key} x{kvp.Value}");
+                else
+                    sb.AppendLine($"• {kvp.Key}");
+            }
+
+            return sb.ToString();
         }
 
         public static int GetPosition(ulong id, out OrderRequest<Item>? order)

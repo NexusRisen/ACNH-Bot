@@ -435,10 +435,18 @@ namespace SysBot.ACNHOrders
         {
             foreach (var msgChannel in channels)
             {
-                if (!await Globals.Self.TrySpeakMessage(msgChannel, message, checkForDoublePosts).ConfigureAwait(false))
+                try
                 {
-                    LogUtil.LogError($"Unable to post into channels: {msgChannel}.", Config.IP);
-                    throw new Exception("Discord has disconnected.");
+                    if (!await Globals.Self.TrySpeakMessage(msgChannel, message, checkForDoublePosts).ConfigureAwait(false))
+                    {
+                        LogUtil.LogError($"Unable to post into channels: {msgChannel}. Bot may not have permission or channel doesn't exist.", Config.IP);
+                        // Don't throw - continue with other channels
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogUtil.LogError($"Failed to post to channel {msgChannel}: {ex.Message}", Config.IP);
+                    // Continue instead of crashing
                 }
             }
 

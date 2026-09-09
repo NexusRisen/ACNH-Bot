@@ -31,7 +31,7 @@ namespace SysBot.ACNHOrders
             {
                 // How much logging do you want to see?
                 LogLevel = LogSeverity.Info,
-                GatewayIntents = Guilds | GuildMessages | DirectMessages | GuildMembers | MessageContent,
+                GatewayIntents = Guilds | GuildMessages | DirectMessages,
                 // If you or another service needs to do anything with messages
                 // (eg. checking Reactions, checking the content of edited/deleted messages),
                 // you must set the MessageCacheSize. You may adjust the number as needed.
@@ -223,7 +223,9 @@ namespace SysBot.ACNHOrders
 
             // Create a number to track where the prefix ends and the command begins
             int pos = 0;
-            if (msg.HasStringPrefix(Bot.Config.Prefix, ref pos))
+            
+            // Check for @mention prefix ONLY - no string prefix support
+            if (msg.HasMentionPrefix(_client.CurrentUser, ref pos))
             {
                 bool handled = await TryHandleCommandAsync(msg, pos).ConfigureAwait(false);
                 if (handled)
