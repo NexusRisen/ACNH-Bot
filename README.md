@@ -23,8 +23,6 @@ Resources:
 
 [Watch how to order items using ACNHMS](https://youtu.be/SWVAf7uyyuw) to be used by the end-user of your bot.
 
-## Support Discord:
-
 [sys-botbase](https://github.com/olliz0r/sys-botbase) client for remote control automation of Nintendo Switch consoles.
 
 Uses [Discord.Net](https://github.com/discord-net/Discord.Net) as a dependency via NuGet.
