@@ -25,8 +25,6 @@ Resources:
 
 ## Support Discord:
 
-[<img src="https://canary.discordapp.com/api/guilds/1375740071843598466/widget.png?style=banner2">](https://discord.gg/FnAGV4pb2k)
-
 [sys-botbase](https://github.com/olliz0r/sys-botbase) client for remote control automation of Nintendo Switch consoles.
 
 Uses [Discord.Net](https://github.com/discord-net/Discord.Net) as a dependency via NuGet.
